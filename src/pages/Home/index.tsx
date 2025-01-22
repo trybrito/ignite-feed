@@ -56,13 +56,13 @@ export function Home() {
       <div className={styles.wrapper}>
         <Sidebar />
         <main>
-          {posts.map(({ author, content, publishedAt }, index) => {
+          {posts.map(({ id, author, content, publishedAt }) => {
             return (
               <Post
+                key={id}
                 author={author}
                 content={content}
                 publishedAt={publishedAt}
-                key={index}
               />
             );
           })}
