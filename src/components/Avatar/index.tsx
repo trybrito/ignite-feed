@@ -1,11 +1,11 @@
 import styles from "./styles.module.css";
 
-type Props = React.ComponentProps<"img"> & {
+interface Props extends React.ComponentProps<"img"> {
   src: string;
   hasBorder?: boolean;
   hasOutline?: boolean;
   size?: "default" | "md" | "lg";
-};
+}
 
 export function Avatar({
   src,

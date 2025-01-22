@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
 import { Avatar } from "../Avatar";
 import { Comment } from "../Comment";
 
@@ -7,20 +7,24 @@ import styles from "./styles.module.css";
 import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-type Props = {
-  author: {
-    avatarUrl: string;
-    name: string;
-    role: string;
-  };
-  content: {
-    type: string;
-    content: string;
-  }[];
-  publishedAt: Date;
-};
+interface Author {
+  avatarUrl: string;
+  name: string;
+  role: string;
+}
 
-export function Post({ author, content, publishedAt }: Props) {
+interface Content {
+  type: "paragraph" | "link";
+  content: string;
+}
+
+export interface PostProps {
+  author: Author;
+  content: Content[];
+  publishedAt: Date;
+}
+
+export function Post({ author, content, publishedAt }: PostProps) {
   const [comments, setComments] = useState([""]);
   const [newCommentText, setNewCommentText] = useState("");
 
@@ -33,14 +37,14 @@ export function Post({ author, content, publishedAt }: Props) {
     addSuffix: true,
   });
 
-  function handleCreateNewComment() {
-    event?.preventDefault();
+  function handleCreateNewComment(event: FormEvent) {
+    event.preventDefault();
     setComments([...comments, newCommentText]);
     setNewCommentText("");
   }
 
-  function handleNewCommentChange() {
-    const targetedTextArea = event?.target as HTMLTextAreaElement;
+  function handleNewCommentChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    const targetedTextArea = event?.target;
 
     if (targetedTextArea.value.trim()) {
       targetedTextArea.setCustomValidity("");
@@ -49,8 +53,8 @@ export function Post({ author, content, publishedAt }: Props) {
     setNewCommentText(targetedTextArea.value);
   }
 
-  function handleNewCommentInvalid() {
-    const targetedTextArea = event?.target as HTMLTextAreaElement;
+  function handleNewCommentInvalid(event: InvalidEvent<HTMLTextAreaElement>) {
+    const targetedTextArea = event?.target;
 
     targetedTextArea.setCustomValidity("Esse campo é obrigatório!");
   }
