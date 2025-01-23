@@ -25,7 +25,7 @@ export interface PostProps {
 }
 
 export function Post({ author, content, publishedAt }: PostProps) {
-  const [comments, setComments] = useState([""]);
+  const [comments, setComments] = useState(Array<string>);
   const [newCommentText, setNewCommentText] = useState("");
 
   const publishedDateTitle = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
@@ -67,7 +67,8 @@ export function Post({ author, content, publishedAt }: PostProps) {
     setComments(commentsWithoutDeletedOne);
   }
 
-  const isNewCommentEmpty = !newCommentText;
+  const hasComments = comments[0];
+  const isNewCommentEmpty = !newCommentText.trim();
 
   return (
     <article className={styles.post}>
@@ -114,16 +115,21 @@ export function Post({ author, content, publishedAt }: PostProps) {
         </footer>
       </form>
 
-      <div className={styles.commentList}>
-        {comments.map((comment) => {
-          return (
-            <Comment
-              key={comment}
-              content={comment}
-              onDeleteComment={deleteComment}
-            />
-          );
-        })}
+      <div
+        className={`${styles.commentList} ${
+          !hasComments && styles.postWithoutCommentList
+        }`}
+      >
+        {hasComments &&
+          comments.map((comment) => {
+            return (
+              <Comment
+                key={comment}
+                content={comment}
+                onDeleteComment={deleteComment}
+              />
+            );
+          })}
       </div>
     </article>
   );
